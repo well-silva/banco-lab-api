@@ -22,15 +22,30 @@ model Bank {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  documento String   @unique
+  id        String    @id @default(uuid())
+  documento String    @unique
   name      String
   password  String
-  email     String   @unique
-  bank      Bank?    @relation(fields: [bankId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  email     String    @unique
+  bank      Bank?     @relation(fields: [bankId], references: [id])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   bankId    String?
+  Account   Account[]
 
   @@map("users")
+}
+
+model Account {
+  id        String   @id @default(uuid())
+  balance   Float
+  type      String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  account   String   @unique
+  agency    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("accounts")
 }

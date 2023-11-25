@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "accounts" ALTER COLUMN "account" SET DATA TYPE TEXT,
+ALTER COLUMN "agency" SET DATA TYPE TEXT;
