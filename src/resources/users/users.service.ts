@@ -11,6 +11,7 @@ export class UsersService {
     readonly prisma: PrismaService,
     private readonly accountsService: AccountsService,
   ) {}
+
   async create(createUserDto: CreateUserDto) {
     const { id: userId } = await this.prisma.user.create({
       data: createUserDto,
@@ -31,7 +32,11 @@ export class UsersService {
     return `This action returns all users`;
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string) {
+    return await this.prisma.user.findUnique({ where: { id } });
+  }
+
+  async findByEmail(email: string) {
+    return await this.prisma.user.findUnique({ where: { email } });
   }
 }

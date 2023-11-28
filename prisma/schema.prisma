@@ -37,15 +37,28 @@ model User {
 }
 
 model Account {
+  id          String        @id @default(uuid())
+  balance     Float
+  type        String
+  userId      String
+  user        User          @relation(fields: [userId], references: [id])
+  account     String        @unique
+  agency      String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  Transaction Transaction[]
+
+  @@map("accounts")
+}
+
+model Transaction {
   id        String   @id @default(uuid())
-  balance   Float
+  value     Float
   type      String
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  account   String   @unique
-  agency    String
+  account   Account  @relation(fields: [accountId], references: [id])
+  accountId String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@map("accounts")
+  @@map("transactions")
 }

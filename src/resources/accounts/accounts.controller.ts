@@ -1,6 +1,7 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Post, Body, Get, Request } from '@nestjs/common';
 import { AccountsService } from './accounts.service';
 import { CreateAccountDto } from './dto/create-account.dto';
+import { Authenticate } from '../../decorators/authenticate.decorator';
 
 @Controller('accounts')
 export class AccountsController {
@@ -11,13 +12,27 @@ export class AccountsController {
     return this.accountsService.create(createAccountDto);
   }
 
+  @Authenticate()
   @Get()
-  findAll() {
-    return this.accountsService.findAll();
+  getBalance(@Request() req: Request) {
+    const userId = req['sub'];
+
+    return this.accountsService.getBalance(userId);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.accountsService.findOne(+id);
+  @Authenticate()
+  @Post('deposit')
+  async deposit(@Body() body: { amount: number }, @Request() req: Request) {
+    const userId = req['sub'];
+
+    return this.accountsService.deposit(userId, body.amount);
+  }
+
+  @Authenticate()
+  @Post('withdraw')
+  async withdraw(@Body() body: { amount: number }, @Request() req: Request) {
+    const userId = req['sub'];
+
+    return this.accountsService.withdraw(userId, body.amount);
   }
 }
